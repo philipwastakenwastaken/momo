@@ -3,15 +3,22 @@
 
 #include "util/timer.hpp"
 
-#include "emu/memory.hpp"
+#include "emu/instruction_fetcher.hpp"
+#include "emu/emulator.hpp"
 
 #include <string>
 
+using namespace momo;
+
 int main(int /*argc*/, char** /*argv*/)
 {
-    momo::Log::init();
+    Log::init();
 
-    MOMO_TRACE("Hello world!");
+    Emulator emu("/Users/philip/dev/chip8-emu/programs/IBM_Logo.ch8");
+
+    emu.fde_loop();
+
+
 
     return 0;
 }

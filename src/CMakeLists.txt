@@ -7,6 +7,8 @@ option(MOMO_ENABLE_ALL_EXTENSIONS "Enable all instruction set extensions availab
 
 # First build a library containing the source files
 add_library(momolib STATIC emu/memory.cpp
+                           emu/emulator.cpp
+                           emu/instruction_fetcher.cpp
                            util/timer.cpp
                            core/log.cpp)
 

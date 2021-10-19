@@ -16,6 +16,7 @@ Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trai
                   -modernize-avoid-c-arrays,
                   -readability-magic-numbers,
                   -llvmlibc-implementation-in-namespace,
+                  -altera-unroll-loops,
                   -cert-err58-cpp,
                   -cert-msc51-cpp,
                   -altera-struct-pack-align,
