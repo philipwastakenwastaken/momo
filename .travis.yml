@@ -1,0 +1,37 @@
+language: cpp
+
+jobs:
+  include:
+    - os: osx
+      compiler: clang
+      osx_image: xcode11.2
+      env:
+        - MATRIX_EVAL=""
+
+    - os: linux
+      dist: bionic
+      compiler: gcc
+      env:
+        - MATRIX_EVAL="CC=gcc && CXX=g++"
+      addons:
+        packages:
+          apt:
+          - gcc-9
+          - g++-9
+
+    - os: linux
+      dist: bionic
+      compiler: clang
+      env:
+        - MATRIX_EVAL="CC=clang && CXX=clang++"
+
+before_script:
+  - eval "${MATRIX_EVAL}"
+
+script:
+  - mkdir build
+  - cd build
+  - cmake ../
+  - cmake --build . -- -j2
+  - ctest -j2
+
