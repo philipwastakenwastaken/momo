@@ -1,4 +1,6 @@
-add_executable(tests gtest_main.cpp)
+add_executable(tests gtest_main.cpp
+                     gtest_util.cpp
+                     gtest_instruction_decode.cpp)
 
 target_link_libraries(tests gtest)
 target_link_libraries(tests momolib)

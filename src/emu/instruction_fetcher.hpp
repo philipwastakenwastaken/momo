@@ -28,6 +28,8 @@ class InstructionFetcher
 
         [[nodiscard]] Instruction fetch(u16 PC) const;
 
+        [[nodiscard]] u32 get_program_size() const { return program_size; }
+
 
 
 

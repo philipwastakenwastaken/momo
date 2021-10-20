@@ -14,7 +14,7 @@
 #define MOMO_STATIC_ASSERT(x, ...) {static_assert(x, __VA_ARGS__);}
 
 #ifdef MOMO_ENABLE_ASSERT
-    #define MOMO_ASSERT(x, ...) {if (!(x)) {MOMO_ERROR("Assertion failed: {0}", __VA_ARGS__); std::abort();}}
+    #define MOMO_ASSERT(x, ...) {if (!(x)) {MOMO_ERROR("Assertion failed: {0} (In function {1}, line {2})", __VA_ARGS__, __func__, __LINE__); std::abort();}}
 #else
     #define MOMO_ASSERT(x, ...)
 #endif
