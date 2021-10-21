@@ -11,6 +11,7 @@ add_library(momolib STATIC emu/memory.cpp
                            emu/instruction_fetcher.cpp
                            emu/instruction_decoder.cpp
                            util/timer.cpp
+                           util/rng.cpp
                            core/log.cpp)
 
 # Now link the source library publicly against spdlog

@@ -19,8 +19,10 @@ class Memory
 
     void write(u16 addr, const u8* data, u16 write_size);
 
+    u8* data() { return mem.data(); }
+
   private:
-    std::array<u16, MemSize> mem{};
+    std::array<u8, MemSize> mem{};
 };
 
 

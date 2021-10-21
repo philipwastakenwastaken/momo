@@ -32,7 +32,7 @@ void Emulator::fde_loop()
 
 void Emulator::execute(Instruction ins, InstructionIndex index)
 {
-    u16 nnn = ins & 0xFFF;
+    u16 nnn = ins & 0x0FFF;
     u16 x = (ins & 0x0F00) >> 8;
     u16 y = (ins & 0x00F0) >> 4;
     u16 kk = ins & 0x00FF;
@@ -43,6 +43,8 @@ void Emulator::execute(Instruction ins, InstructionIndex index)
         &&JP_ADDR,
         &&CALL_ADDR,
         &&SE_VX_BYTE,
+        &&SNE_VX_BYTE,
+        &&SE_VX_VY,
         &&LD_VX_BYTE,
         &&ADD_VX_BYTE,
         &&LD_VX_VY,
@@ -79,8 +81,8 @@ CLS : {
     goto END;
 }
 RET : {
-    SPreg--;
     PC = stack[SPreg];
+    SPreg--;
     goto END;
 }
 SYS_ADDR : {
@@ -92,18 +94,32 @@ JP_ADDR : {
     goto END;
 }
 CALL_ADDR : {
-    stack[SPreg] = PC;
     SPreg++;
+    stack[SPreg] = PC;
     PC = nnn;
     goto END;
 }
 SE_VX_BYTE : {
+    if (regs[x] == kk)
+        PC += PCIncrement;
+    goto END;
+}
+SNE_VX_BYTE : {
+    if (regs[x] != kk)
+        PC += PCIncrement;
+    goto END;
+}
+SE_VX_VY : {
+    if (regs[x] == regs[y])
+        PC += PCIncrement;
     goto END;
 }
 LD_VX_BYTE : {
+    regs[x] = static_cast<u8>(kk);
     goto END;
 }
 ADD_VX_BYTE : {
+    regs[x] += kk;
     goto END;
 }
 LD_VX_VY : {
@@ -129,8 +145,10 @@ ADD_VX_VY : {
     goto END;
 }
 SUB_VX_VY : {
-    regs[0xF] = regs[x] > regs[y];
-    regs[x] -= regs[y];
+    u8 vx = regs[x];
+    u8 vy = regs[y];
+    regs[0xF] = vx > vy;
+    regs[x] = vx - vy;
     goto END;
 }
 SHR_VX_VY : {
@@ -144,7 +162,7 @@ SUBN_VX_VY : {
     goto END;
 }
 SHL_VX_VY : {
-    regs[0xF] = regs[x] & 1;
+    regs[0xF] = bool(regs[x] & 0b10000000);
     regs[x] <<= 1;
     goto END;
 }
@@ -212,11 +230,18 @@ LD_B_VX : {
     goto END;
 }
 LD_I_VX : {
-    mem.write(Ireg, reinterpret_cast<u8*>(regs.data()), sizeof(u8) * (regs[x] + 1));
+    mem.write(Ireg, reinterpret_cast<u8*>(regs.data()), sizeof(u8) * (x + 1));
     goto END;
 }
 LD_VX_I : {
-    mem.read(Ireg, regs[x] + 1, regs.data());
+    // Could technically get away with a single memcpy call here, but I like going through
+    // the memory.read() interface for safety.
+
+    u8 buffer[RegCount];
+    u16 write_size = x + 1;
+    mem.read(Ireg, write_size, buffer);
+
+    std::memcpy(regs.data(), buffer, write_size);
     goto END;
 }
 

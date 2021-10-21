@@ -6,8 +6,8 @@ namespace momo {
 
 RNG::RNG()
 {
-    std::random_device rd;
-    mt = std::mt19937(rd);
+    mt = std::mt19937();
+    mt.seed(Seed);
     dist = std::uniform_int_distribution<u8>();
 }
 

@@ -1,5 +1,7 @@
 add_executable(tests gtest_main.cpp
                      gtest_util.cpp
+                     gtest_memory.cpp
+                     gtest_instruction_execute.cpp
                      gtest_instruction_decode.cpp)
 
 target_link_libraries(tests gtest)

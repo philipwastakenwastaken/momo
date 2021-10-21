@@ -8,6 +8,8 @@
 
 namespace momo {
 
+constexpr u64 Seed = 9128492;
+
 // Generates random 8-bit numbers
 class RNG
 {
