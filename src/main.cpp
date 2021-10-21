@@ -7,7 +7,11 @@
 #include "emu/instruction_decoder.hpp"
 #include "emu/emulator.hpp"
 
+#include "render/window.hpp"
+
+#include <chrono>
 #include <string>
+#include <thread>
 
 using namespace momo;
 
@@ -15,12 +19,9 @@ int main(int /*argc*/, char** /*argv*/)
 {
     Log::init();
 
-    Instruction ins = 0x00E0; // 1NNN, JUMP
-    auto index = InstructionDecoder::decode(ins);
-    MOMO_TRACE(index);
+    Window window;
 
-    // Emulator emu("/Users/philip/dev/momo/programs/IBM_Logo.ch8");
-    // emu.fde_loop();
+    window.loop();
 
 
     return 0;

@@ -20,7 +20,6 @@ Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trai
                   -cert-err58-cpp,
                   -cert-msc51-cpp,
                   -altera-id-dependent-backward-branch,
-                  -Wgnu-label-as-value,
                   -cppcoreguidelines-pro-type-reinterpret-cast,
                   -bugprone-easily-swappable-parameters,
                   -altera-struct-pack-align,

@@ -8,6 +8,11 @@
 
 namespace momo {
 
+// Upscaled by 10.
+constexpr i32 WindowScaleFactor = 10;
+constexpr i32 WindowWidth = 64 * WindowScaleFactor;
+constexpr i32 WindowHeight = 32 * WindowScaleFactor;
+
 constexpr u16 MemSize = 4096;
 constexpr u16 MemStartAddress = 0x200;
 

@@ -19,6 +19,8 @@ include(cmake/Cache.cmake)
 include(cmake/CompilerWarnings.cmake)
 set_project_warnings(project_warnings)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+
 option(MOMO_ENABLE_TESTING "Enable Test Builds" ON)
 
 add_subdirectory(lib)

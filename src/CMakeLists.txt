@@ -10,14 +10,20 @@ add_library(momolib STATIC emu/memory.cpp
                            emu/emulator.cpp
                            emu/instruction_fetcher.cpp
                            emu/instruction_decoder.cpp
+                           render/window.cpp
                            util/timer.cpp
                            util/rng.cpp
                            core/log.cpp)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
+
+find_package(SDL2 REQUIRED)
 
 # Now link the source library publicly against spdlog
 target_link_libraries(momolib PUBLIC
                               project_options
                               project_warnings
+                              SDL2::Main
                               spdlog::spdlog)
 
 # Prefer pthreads on Unix.
