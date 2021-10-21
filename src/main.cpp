@@ -19,9 +19,8 @@ int main(int /*argc*/, char** /*argv*/)
     auto index = InstructionDecoder::decode(ins);
     MOMO_TRACE(index);
 
-    //Emulator emu("/Users/philip/dev/momo/programs/IBM_Logo.ch8");
-    //emu.fde_loop();
-
+    // Emulator emu("/Users/philip/dev/momo/programs/IBM_Logo.ch8");
+    // emu.fde_loop();
 
 
     return 0;

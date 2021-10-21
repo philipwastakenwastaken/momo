@@ -11,15 +11,10 @@ using namespace momo;
 
 class InstructionExecute : public ::testing::Test
 {
-    protected:
-
-    void SetUp() override
-    {
-        emu = Emulator();
-    }
+  protected:
+    void SetUp() override { emu = Emulator(); }
 
     Emulator emu;
-
 };
 
 TEST_F(InstructionExecute, CALL_ADDR_AND_RET)
@@ -509,7 +504,7 @@ TEST_F(InstructionExecute, LD_B_VX)
 
 TEST_F(InstructionExecute, LD_I_VX)
 {
-    u8 values[15] = {0, 19, 29, 9, 3, 9, 100, 184, 29, 18, 1, 2, 3, 4, 10};
+    u8 values[15] = { 0, 19, 29, 9, 3, 9, 100, 184, 29, 18, 1, 2, 3, 4, 10 };
 
     emu.set_reg(0, values[0]);
     emu.set_reg(1, values[1]);
@@ -558,7 +553,7 @@ TEST_F(InstructionExecute, LD_I_VX)
 
 TEST_F(InstructionExecute, LD_VX_I)
 {
-    u8 values[15] = {0, 19, 29, 9, 3, 9, 100, 184, 29, 18, 1, 2, 3, 4, 10};
+    u8 values[15] = { 0, 19, 29, 9, 3, 9, 100, 184, 29, 18, 1, 2, 3, 4, 10 };
 
     u16 addr = 0x244;
     emu.set_Ireg(addr);

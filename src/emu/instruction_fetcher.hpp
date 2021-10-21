@@ -20,27 +20,20 @@ namespace momo {
 class InstructionFetcher
 {
 
-    public:
+  public:
+    // file_path contains the file_path of the <program-name>.ch8 program to be run.
+    explicit InstructionFetcher(std::string_view file_path);
+    ~InstructionFetcher();
 
-        // file_path contains the file_path of the <program-name>.ch8 program to be run.
-        explicit InstructionFetcher(std::string_view file_path);
-        ~InstructionFetcher();
+    [[nodiscard]] Instruction fetch(u16 PC) const;
 
-        [[nodiscard]] Instruction fetch(u16 PC) const;
-
-        [[nodiscard]] u32 get_program_size() const { return program_size; }
-
+    [[nodiscard]] u32 get_program_size() const { return program_size; }
 
 
-
-
-    private:
-        u8* program = nullptr;
-        u32 program_size = 0;
-
+  private:
+    u8* program = nullptr;
+    u32 program_size = 0;
 };
-
-
 
 
 } // namespace momo

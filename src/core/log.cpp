@@ -23,4 +23,4 @@ void Log::init()
     error_logger->set_level(spdlog::level::err);
 }
 
-} // namespace vsmas
+} // namespace momo

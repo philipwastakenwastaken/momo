@@ -24,7 +24,6 @@ constexpr u16 PCIncrement = InstructionSize;
 constexpr u16 StackSize = 16;
 
 
-
 // clang-format off
 constexpr std::array<u16, 80> font = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0

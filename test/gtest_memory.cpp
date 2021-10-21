@@ -11,12 +11,8 @@ using namespace momo;
 
 class MemoryTest : public ::testing::Test
 {
-    protected:
-
-    void SetUp() override
-    {
-        mem = Memory();
-    }
+  protected:
+    void SetUp() override { mem = Memory(); }
 
     Memory mem;
 };
@@ -82,7 +78,7 @@ TEST_F(MemoryTest, WriteSingleByte)
     u16 addr2 = 0xFA;
     u16 addr3 = 0x87C;
 
-    u8 write_data[3] = {1, 10, 187};
+    u8 write_data[3] = { 1, 10, 187 };
 
     mem.write(addr1, write_data, 1);
     mem.write(addr2, write_data + 1, 1);
@@ -115,7 +111,7 @@ TEST_F(MemoryTest, WriteMultipleBytes)
 
     u16 addr = 0x34;
 
-    u8 write_data[10] = {1, 10, 187, 192, 28, 29, 1, 23, 0, 99};
+    u8 write_data[10] = { 1, 10, 187, 192, 28, 29, 1, 23, 0, 99 };
 
     mem.write(addr, write_data, 10);
 

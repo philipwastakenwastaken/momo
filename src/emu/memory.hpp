@@ -26,5 +26,4 @@ class Memory
 };
 
 
-
 } // namespace momo

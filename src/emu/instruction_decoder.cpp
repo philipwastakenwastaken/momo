@@ -41,12 +41,10 @@ InstructionIndex InstructionDecoder::decode(Instruction ins)
                 passed_all_components = false;
                 break;
             }
-
         }
 
         if (passed_all_components)
             return index;
-
     }
 
     MOMO_ASSERT(false, "Failed to decode instruction");

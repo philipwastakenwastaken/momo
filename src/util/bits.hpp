@@ -26,8 +26,8 @@ inline u16 toggle_bit_range(u16 from, u16 to)
     MOMO_ASSERT(from > 0 && from <= 16, "Invalid from range");
     MOMO_ASSERT(to > 0 && to <= 16, "Invalid to range");
     MOMO_ASSERT(from <= to, "From must be smaller than or equal to to");
-    return u16(UINT_MAX >> (CHAR_BIT*sizeof(int) - to)) & (UINT_MAX << (from - 1));
+    return u16(UINT_MAX >> (CHAR_BIT * sizeof(int) - to)) & (UINT_MAX << (from - 1));
 }
 
 
-}
+} // namespace momo

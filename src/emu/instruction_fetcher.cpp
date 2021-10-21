@@ -13,8 +13,7 @@ InstructionFetcher::InstructionFetcher(std::string_view file_path)
     std::ifstream infile(file_path, std::ios_base::binary);
     MOMO_ASSERT(!infile.fail(), "File could not be opened");
 
-    std::vector<char> buffer((std::istreambuf_iterator<char>(infile)),
-                              std::istreambuf_iterator<char>() );
+    std::vector<char> buffer((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
 
     MOMO_TRACE("File contains {0} bytes", buffer.size());
 
@@ -44,4 +43,4 @@ Instruction InstructionFetcher::fetch(u16 PC) const
 }
 
 
-}
+} // namespace momo
