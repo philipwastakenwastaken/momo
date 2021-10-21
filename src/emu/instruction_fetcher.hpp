@@ -23,6 +23,7 @@ class InstructionFetcher
   public:
     // file_path contains the file_path of the <program-name>.ch8 program to be run.
     explicit InstructionFetcher(std::string_view file_path);
+    InstructionFetcher() = default;
     ~InstructionFetcher();
 
     [[nodiscard]] Instruction fetch(u16 PC) const;

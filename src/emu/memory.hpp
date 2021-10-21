@@ -15,6 +15,9 @@ namespace momo {
 class Memory
 {
   public:
+    Memory() noexcept;
+    ~Memory() = default;
+
     void read(u16 addr, u16 read_size, u8* buffer) const;
 
     void write(u16 addr, const u8* data, u16 write_size);

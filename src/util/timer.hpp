@@ -3,9 +3,9 @@
 
 namespace momo {
 
-using MILLI = std::chrono::milliseconds;
-using MICRO = std::chrono::microseconds;
-using NANO = std::chrono::nanoseconds;
+using Milli = std::chrono::milliseconds;
+using Micro = std::chrono::microseconds;
+using Nano = std::chrono::nanoseconds;
 
 class Timer
 {

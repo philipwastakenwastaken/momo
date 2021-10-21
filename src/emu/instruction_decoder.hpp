@@ -72,6 +72,52 @@ constexpr std::array<InstructionEncoding, NumInstructions> InstructionEncodings 
     InstructionEncoding("LD Vx, [I]", 2, { BitRange(13, 16), BitRange(1, 8) }, { 0xF, 0x65 })
 };
 
+// Times are given in microseconds.
+struct InstructionTiming
+{
+    constexpr InstructionTiming(u16 t, u16 v): time(t), variance(v) {}
+    u16 time = 0;
+    u16 variance = 0;
+};
+
+constexpr std::array<InstructionTiming, NumInstructions> InstructionTimings = {
+    InstructionTiming(109, 0),
+    InstructionTiming(105, 5),
+    InstructionTiming(0, 0), // 0nnn is missing from table
+    InstructionTiming(105, 5),
+    InstructionTiming(105, 5),
+    InstructionTiming(55, 9),
+    InstructionTiming(55, 0),
+    InstructionTiming(73, 0),
+    InstructionTiming(27, 0),
+    InstructionTiming(45, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(200, 0),
+    InstructionTiming(73, 9),
+    InstructionTiming(55, 0),
+    InstructionTiming(105, 5),
+    InstructionTiming(164, 0),
+    InstructionTiming(22734, 4634),
+    InstructionTiming(73, 9),
+    InstructionTiming(73, 9),
+    InstructionTiming(45, 0),
+    InstructionTiming(0, 0),
+    InstructionTiming(45, 0),
+    InstructionTiming(45, 0),
+    InstructionTiming(86, 14),
+    InstructionTiming(91, 0),
+    InstructionTiming(927, 545),
+    InstructionTiming(605, 477),
+    InstructionTiming(605, 477)
+};
+
 // Mainly used for testing. Finds the index of a given instruction in the above InstructionEncodings
 // array.
 InstructionIndex find_instruction_index(std::string_view name);

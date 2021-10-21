@@ -1,6 +1,13 @@
 #include "emu/memory.hpp"
+#include "emu/specs.hpp"
 
 namespace momo {
+
+Memory::Memory() noexcept
+{
+    // Legal since address 0x0 to 0x200 is reserved.
+    std::memcpy(mem.data(), FontData.data(), FontDataSize);
+}
 
 void Memory::write(u16 addr, const u8* data, u16 write_size)
 {

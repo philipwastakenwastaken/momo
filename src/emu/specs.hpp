@@ -9,11 +9,11 @@
 namespace momo {
 
 constexpr u16 MemSize = 4096;
+constexpr u16 MemStartAddress = 0x200;
 
 // 16 general purpose 8-bit registers + 1 16-bit index register
 constexpr u16 RegCount = 16;
 using RegisterArray = std::array<u8, RegCount>;
-using IndexRegister = u16;
 
 // Chip-8 fetches 16-bit instructions, which means that the PC
 // must be incremented by the same amount (in bytes).
@@ -24,8 +24,9 @@ constexpr u16 PCIncrement = InstructionSize;
 constexpr u16 StackSize = 16;
 
 
+constexpr u16 FontDataSize = 80;
 // clang-format off
-constexpr std::array<u16, 80> font = {
+constexpr std::array<u16, FontDataSize> FontData = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
     0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2

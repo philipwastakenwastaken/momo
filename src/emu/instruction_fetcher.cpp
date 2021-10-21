@@ -26,12 +26,12 @@ InstructionFetcher::InstructionFetcher(std::string_view file_path)
 
 InstructionFetcher::~InstructionFetcher()
 {
-    MOMO_ASSERT(program, "InstructionFetcher program pointer is null");
     delete[] program;
 }
 
 Instruction InstructionFetcher::fetch(u16 PC) const
 {
+    MOMO_ASSERT(program, "No program loaded");
     MOMO_ASSERT(PC < program_size, "PC is larger than program size");
     Instruction ins = 0;
 

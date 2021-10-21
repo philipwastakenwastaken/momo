@@ -5,9 +5,14 @@
 #include "core/core.hpp"
 
 #include "emu/instruction_decoder.hpp"
+#include "emu/instruction_fetcher.hpp"
 #include "emu/memory.hpp"
 
+#include "emu/specs.hpp"
 #include "util/rng.hpp"
+
+#include <mutex>
+#include <condition_variable>
 
 namespace momo {
 
@@ -15,14 +20,17 @@ class Emulator
 {
 
   public:
-    explicit Emulator(std::string_view path) : program_path(path) {}
+    explicit Emulator(std::string_view path) : ifetcher(path), program_path(path) {}
     Emulator() = default;
 
-    // Fetch/decode/execute loop.
-    void fde_loop();
+    // Main emulation loop.
+    void loop();
 
     // Execute the given instruction.
     void execute(Instruction ins, InstructionIndex index);
+
+    u16 cpu_tick();
+    void timer_tick();
 
     [[nodiscard]] u8 get_register(u8 idx) const { return regs[idx]; }
     [[nodiscard]] u16 get_PC() const { return PC; }
@@ -41,6 +49,8 @@ class Emulator
 
 
   private:
+    InstructionFetcher ifetcher;
+
     RNG rng{};
 
     Memory mem;
@@ -49,7 +59,7 @@ class Emulator
     RegisterArray regs{};
 
     // Special registers
-    IndexRegister Ireg = 0;
+    u16 Ireg = MemStartAddress;
     u8 DTreg = 0;
     u8 STreg = 0;
 

@@ -1,20 +1,44 @@
 #include "emu/emulator.hpp"
 
-#include "emu/instruction_fetcher.hpp"
+#include "emu/instruction_decoder.hpp"
 #include "emu/specs.hpp"
+
 #include "util/hex.hpp"
+#include "util/timer.hpp"
+#include <thread>
 
 namespace momo {
 
 
-void Emulator::fde_loop()
+void Emulator::loop()
 {
-    InstructionFetcher ifetcher(program_path);
+    Timer timer;
+    u64 accumulated_time = 0;
 
-    MOMO_ASSERT(false, "Failed");
+    constexpr u64 TimerUpdateRate = 16666;
+
+    timer.start();
     while (true)
     {
+        u16 cpu_time = cpu_tick();
 
+        timer.stop();
+        auto elapsed = timer.elapsed<Micro>();
+        accumulated_time += elapsed;
+
+        if (accumulated_time > TimerUpdateRate)
+        {
+            timer_tick();
+            accumulated_time = 0;
+        }
+
+        std::this_thread::sleep_for(std::chrono::microseconds(cpu_time));
+    }
+
+}
+
+u16 Emulator::cpu_tick()
+{
         /// FETCH
         Instruction ins = ifetcher.fetch(PC);
         MOMO_TRACE(to_hex(ins));
@@ -27,7 +51,16 @@ void Emulator::fde_loop()
 
         // EXECUTE
         execute(ins, index);
-    }
+
+        return InstructionTimings[index].time;
+}
+
+void Emulator::timer_tick()
+{
+    if (DTreg > 0)
+        DTreg--;
+    if (STreg > 0)
+        STreg--;
 }
 
 void Emulator::execute(Instruction ins, InstructionIndex index)
@@ -220,13 +253,14 @@ LD_F_VX : {
     goto END;
 }
 LD_B_VX : {
-    u16 hundreds = regs[x] / 100;
-    u16 tenths = (regs[x] % 100) / 10;
-    u16 ones = regs[x] % 10;
+    u8 hundreds = regs[x] / 100;
+    u8 tenths = (regs[x] % 100) / 10;
+    u8 ones = regs[x] % 10;
 
-    mem.write(Ireg, reinterpret_cast<u8*>(&hundreds), sizeof(u16));
-    mem.write(Ireg + 1, reinterpret_cast<u8*>(&tenths), sizeof(u16));
-    mem.write(Ireg + 2, reinterpret_cast<u8*>(&ones), sizeof(u16));
+    // Pack together to save memcpy calls.
+    u8 buffer[3] = {hundreds, tenths, ones};
+    mem.write(Ireg, buffer, 3);
+
     goto END;
 }
 LD_I_VX : {
