@@ -19,6 +19,7 @@ Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trai
                   -altera-unroll-loops,
                   -cert-err58-cpp,
                   -cert-msc51-cpp,
+                  -readability-convert-member-functions-to-static,
                   -altera-id-dependent-backward-branch,
                   -cppcoreguidelines-pro-type-reinterpret-cast,
                   -bugprone-easily-swappable-parameters,

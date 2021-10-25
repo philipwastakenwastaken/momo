@@ -7,12 +7,12 @@
 #include "emu/instruction_decoder.hpp"
 #include "emu/instruction_fetcher.hpp"
 #include "emu/memory.hpp"
-
 #include "emu/specs.hpp"
+
 #include "util/rng.hpp"
 
-#include <mutex>
-#include <condition_variable>
+#include "render/window.hpp"
+
 
 namespace momo {
 
@@ -39,6 +39,8 @@ class Emulator
     [[nodiscard]] u8 get_STreg() const { return STreg; }
     [[nodiscard]] const Memory& get_mem() const { return mem; }
     [[nodiscard]] Memory& get_mem() { return mem; }
+    [[nodiscard]] const ScreenDataArray& get_screen_data() const { return screen_data; }
+    [[nodiscard]] Window& get_window() { return window; }
 
     [[nodiscard]] u16 stack_top() const { return stack[SPreg]; }
 
@@ -49,7 +51,10 @@ class Emulator
 
 
   private:
+    void poll_events(bool& quit);
+
     InstructionFetcher ifetcher;
+    bool draw_instruction = false;
 
     RNG rng{};
 
@@ -67,6 +72,9 @@ class Emulator
     u8 SPreg = 0;
 
     u16 PC = 0;
+
+    ScreenDataArray screen_data{};
+    Window window;
 
     std::string_view program_path;
 };

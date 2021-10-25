@@ -1,11 +1,16 @@
 #pragma once
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
+
+#include <glm/glm.hpp>
 
 #include "core/hardware.hpp"
 #include "core/log.hpp"
 #include "core/core.hpp"
 
-#include <SDL.h>
-#include <string>
+#include "emu/specs.hpp"
+
+
 
 namespace momo {
 
@@ -15,16 +20,18 @@ class Window
         Window();
         ~Window();
 
-        void loop();
+        // Takes a 2d array of pixels which are rendered to the window.
+        void render(const ScreenDataArray& screen_data);
 
+        void swap_buffers() { glfwSwapBuffers(window); }
+        void poll_events() { glfwPollEvents(); }
+        [[nodiscard]] bool should_close() const { return glfwWindowShouldClose(window); }
 
+        [[nodiscard]] GLFWwindow* get_window() { return window; }
     private:
-
-    char const* Title = "Momo: Chip-8 Emulator";
-    SDL_Window* window = nullptr;
-    SDL_Surface* surface = nullptr;
+        GLFWwindow* window = nullptr;
+        glm::mat4 proj;
 
 };
-
 
 }

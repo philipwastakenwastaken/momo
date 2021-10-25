@@ -1,3 +1,5 @@
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
 #include "core/log.hpp"
 #include "core/core.hpp"
 
@@ -19,10 +21,21 @@ int main(int /*argc*/, char** /*argv*/)
 {
     Log::init();
 
-    Window window;
+    Emulator emu;
+    emu.set_Ireg(0);
 
-    window.loop();
+    Window& window = emu.get_window();
 
+    Instruction ins = 0xD015;
+    auto index = InstructionDecoder::decode(ins);
+    emu.execute(ins, index);
+
+    window.render(emu.get_screen_data());
+
+    while (!window.should_close())
+    {
+        window.poll_events();
+    }
 
     return 0;
 }

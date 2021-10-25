@@ -5,6 +5,7 @@
 
 #include "util/hex.hpp"
 #include "util/timer.hpp"
+#include <chrono>
 #include <thread>
 
 namespace momo {
@@ -17,42 +18,51 @@ void Emulator::loop()
 
     constexpr u64 TimerUpdateRate = 16666;
 
-    timer.start();
-    while (true)
+    while (!window.should_close())
     {
+        timer.start();
+        window.poll_events();
+
         u16 cpu_time = cpu_tick();
+
+
+        if (draw_instruction)
+            window.render(screen_data);
 
         timer.stop();
         auto elapsed = timer.elapsed<Micro>();
         accumulated_time += elapsed;
 
+        // Timers update at a rate of 60 Hz.
         if (accumulated_time > TimerUpdateRate)
         {
             timer_tick();
             accumulated_time = 0;
         }
 
-        std::this_thread::sleep_for(std::chrono::microseconds(cpu_time));
+        // We should spend at most cpu_time microseconds each iteration.
+        auto sleep_time = std::chrono::microseconds(cpu_time - elapsed);
+        std::this_thread::sleep_for(sleep_time);
     }
-
 }
+
 
 u16 Emulator::cpu_tick()
 {
-        /// FETCH
-        Instruction ins = ifetcher.fetch(PC);
-        MOMO_TRACE(to_hex(ins));
+    /// FETCH
+    Instruction ins = ifetcher.fetch(PC);
+    MOMO_TRACE(to_hex(ins));
 
-        // Increment the PC now so that we don't forget later.
-        PC += PCIncrement;
+    // Increment the PC now so that we don't forget later.
+    PC += PCIncrement;
 
-        /// DECODE
-        InstructionIndex index = InstructionDecoder::decode(ins);
+    /// DECODE
+    InstructionIndex index = InstructionDecoder::decode(ins);
 
-        // EXECUTE
-        execute(ins, index);
+    // EXECUTE
+    execute(ins, index);
 
-        return InstructionTimings[index].time;
+    return InstructionTimings[index].time;
 }
 
 void Emulator::timer_tick()
@@ -65,7 +75,10 @@ void Emulator::timer_tick()
 
 void Emulator::execute(Instruction ins, InstructionIndex index)
 {
+    draw_instruction = false;
+
     u16 nnn = ins & 0x0FFF;
+    u8 n = ins & 0xF;
     u16 x = (ins & 0x0F00) >> 8;
     u16 y = (ins & 0x00F0) >> 4;
     u16 kk = ins & 0x00FF;
@@ -106,7 +119,7 @@ void Emulator::execute(Instruction ins, InstructionIndex index)
         &&LD_I_VX,
         &&LD_VX_I };
 
-    goto *labels[index];
+    goto* labels[index];
 
 
 CLS : {
@@ -217,7 +230,57 @@ RND_VX_BYTE : {
     goto END;
 }
 DRW_VX_VY_NIBBLE : {
-    // TODO
+    draw_instruction = true;
+    u8 x_coord = regs[x] % 64;
+    u8 y_coord = regs[y] % 32;
+    regs[0xF] = 0;
+
+    u8 sprite_data[15]{};
+    mem.read(Ireg, n, sprite_data);
+
+    for (u32 i = 0; i <= n; ++i)
+    {
+        u8 row_data = sprite_data[i];
+
+        if (y_coord > WindowHeight)
+            break;
+
+        for (u32 j = 0; j < 8; ++j)
+        {
+            u8 pixel = bool(row_data & 0b10000000);
+
+            // Break if we reach edge of screen.
+            if (x_coord >= WindowWidth)
+            {
+                MOMO_TRACE("Stopping row: {0} {1}", x_coord, y_coord);
+                break;
+            }
+
+            // If sprite bitmap and corresponding pixel is on, turn pixel off and
+            // set 0xF to 1.
+            if (pixel && screen_data[x_coord][y_coord])
+            {
+                MOMO_TRACE("Turned off pixel at: {0}, {1}", x_coord, y_coord);
+                screen_data[x_coord][y_coord] = 0;
+                regs[0xF] = 1;
+            }
+
+            // If sprite bitmap is on, turn the pixel on.
+            if (pixel)
+            {
+                MOMO_TRACE("Drew pixel at: {0}, {1}", x_coord, y_coord);
+                screen_data[x_coord][y_coord] = 1;
+            }
+
+
+            ++x_coord;
+            row_data <<= 1;
+        }
+
+        ++y_coord;
+    }
+
+
     goto END;
 }
 SKP_VX : {
@@ -258,7 +321,7 @@ LD_B_VX : {
     u8 ones = regs[x] % 10;
 
     // Pack together to save memcpy calls.
-    u8 buffer[3] = {hundreds, tenths, ones};
+    u8 buffer[3] = { hundreds, tenths, ones };
     mem.write(Ireg, buffer, 3);
 
     goto END;

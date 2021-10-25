@@ -10,8 +10,9 @@ namespace momo {
 
 // Upscaled by 10.
 constexpr i32 WindowScaleFactor = 10;
-constexpr i32 WindowWidth = 64 * WindowScaleFactor;
-constexpr i32 WindowHeight = 32 * WindowScaleFactor;
+constexpr i32 WindowWidth = 64;
+constexpr i32 WindowHeight = 32;
+using ScreenDataArray = std::array<std::array<u8, WindowHeight>, WindowWidth>;
 
 constexpr u16 MemSize = 4096;
 constexpr u16 MemStartAddress = 0x200;
@@ -31,7 +32,7 @@ constexpr u16 StackSize = 16;
 
 constexpr u16 FontDataSize = 80;
 // clang-format off
-constexpr std::array<u16, FontDataSize> FontData = {
+constexpr std::array<u8, FontDataSize> FontData = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
     0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
